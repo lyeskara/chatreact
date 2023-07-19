@@ -9,10 +9,12 @@ function Signup() {
     const [__, setJWT] = useAtom(JWTatom)
     const navigate = useNavigate()
     const [username, setUsername] = useState<string>();
+    const [password, setPassword] = useState<string>();
+
     const SignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const request = { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ "username": username }) };
+        const request = { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ "username": username, "password":password }) };
 
         const response = await fetch("http://localhost:8000/signup", request)
 
@@ -27,8 +29,8 @@ function Signup() {
                 setAuth(true);
                 setJWT(token);
             }
+            navigate('/') 
         }
-        navigate('/callroom') 
         
     }
 
@@ -40,6 +42,12 @@ function Signup() {
                 placeholder="add username"
                 className={`${styles.signinChild} ${styles.input}`}
                 onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+                type="text" 
+                placeholder="add password"
+                className={`${styles.signinChild} ${styles.input}`}
+                onChange={(e) => setPassword(e.target.value)} 
             />
             <button className={styles.signinItem} type="submit">Sign up</button>
             <Link to="/login" className={styles.redirect}>already have an account? log in</Link>

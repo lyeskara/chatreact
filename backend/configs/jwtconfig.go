@@ -17,3 +17,5 @@ func GenerateJWToken(user *models.User) (string, error) {
 	}
 	return JWT, nil
 }
+
+

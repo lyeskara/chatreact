@@ -27,8 +27,8 @@ function Login() {
                 setAuth(true);
                 setJWT(token);
             }
+            navigate('/') 
         }
-        navigate('/callroom') 
     }
 
     return (

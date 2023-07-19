@@ -1,6 +1,8 @@
 package middlewares
 
 import (
+	"backend/models"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,19 +13,24 @@ import (
 func JWTmiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		if r.URL.Path == "/login" || r.URL.Path == "/signup" {
+		if  r.URL.Path == "/login" || r.URL.Path == "/signup" || r.URL.Path == "/ws"  {
 			next.ServeHTTP(w, r)
 			return
 		}
 
 		Token_string := r.Header.Get("Authorization") // remove "Bearer " prefix
 		var JWT string
-
 		for i := 7; i < len(Token_string); i++ {
 			char := string(Token_string[i])
 			JWT += char
 		}
-		
+
+		if JWT == "" {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprint(w, "Invalid or expired token")
+			return
+		}
+
 		token, err := jwt.Parse(JWT, func(token *jwt.Token) (interface{}, error) {
 			// validate the signing algorithm
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -33,7 +40,7 @@ func JWTmiddleware(next http.Handler) http.Handler {
 			return []byte("KDks9v2f9EK1B1RZ"), nil
 		})
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		if err != nil || !token.Valid {
 			w.WriteHeader(http.StatusUnauthorized)
@@ -41,7 +48,15 @@ func JWTmiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		var user models.User
+		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			user.Username = claims["username"].(string)
+		}
+
+
+		ctx := context.WithValue(r.Context(), models.UserName, user.Username)
+
 		// Token is valid, proceed to the next handler
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
