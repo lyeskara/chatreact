@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"github.com/gorilla/websocket"
 )
 
 func Signup(w http.ResponseWriter, r *http.Request) {
@@ -77,15 +76,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Userdata(w http.ResponseWriter, r *http.Request) {
-	db := configs.Connect_db()
-	defer db.Close()
-
-	username := r.Context().Value(models.UserName).(string)
-	var user models.User
-	user.Username = username
-
-}
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 
@@ -107,40 +97,32 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func GetRooms(w http.ResponseWriter, r *http.Request){
+	db := configs.Connect_db()
+	defer db.Close()
 
-func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
-
-	var upgrader = websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
-		CheckOrigin:     func(r *http.Request) bool { return true },
+	results, err := queries.Rooms(db)
+	if err != nil {
+		log.Println(err, "    ", "SEARCHING")
 	}
-
-	// Upgrade the HTTP connection to a WebSocket connection.
-	conn, err := upgrader.Upgrade(w, r, nil)
+	err = json.NewEncoder(w).Encode(results)
 	if err != nil {
 		log.Println(err)
-		return
 	}
-	defer conn.Close()
-
-	for {
-		// Read message from the client
-		_, msg, err := conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			break
-		}
-		
-		// Print the received message
-		log.Printf("Received message: %s\n", msg)
-
-		// Write message back to the client
-		err = conn.WriteMessage(websocket.TextMessage, msg)
-		if err != nil {
-			log.Println(err)
-			break
-		}
-	}
+	w.Header().Set("Content-Type", "application/json")
 }
 
+func GetMessages(w http.ResponseWriter, r *http.Request){
+	db := configs.Connect_db()
+	defer db.Close()
+    roomName := r.URL.Query().Get("roomName")
+	results, err := queries.Messages(db, roomName)
+	if err != nil {
+		log.Println(err, "    ", "ROOMNAME")
+	}
+	err = json.NewEncoder(w).Encode(results)
+	if err != nil {
+		log.Println(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+}
