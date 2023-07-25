@@ -4,6 +4,8 @@ import Signup from '../pages/Signup'
 import { Route, Routes } from 'react-router-dom'
 import Nav from '../components/Nav'
 import { AuthMiddleware } from './Middleware'
+import  Messanger from '../pages/Messenger'
+import ChatRoom from '../pages/ChatRoom'
 function App() {
 
 
@@ -11,10 +13,10 @@ function App() {
     <>
       <Nav />
       <Routes>
-        <Route path='/' element={<AuthMiddleware><Callroom /></AuthMiddleware>} />
+        <Route path='/' element={<AuthMiddleware><Messanger /></AuthMiddleware>} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/available-rooms' element={<AuthMiddleware><SDPs /></AuthMiddleware>} />
+        <Route path='/:room' element={<AuthMiddleware><ChatRoom /></AuthMiddleware>} />
       </Routes>
     </>
   )
