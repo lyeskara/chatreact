@@ -33,7 +33,7 @@ func JWTmiddleware(next http.Handler) http.Handler {
 					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 				}
 				// provide the key to validate the signature
-				return []byte("KDks9v2f9EK1B1RZ"), nil
+				return []byte(models.Secret), nil
 			})
 			if err != nil {
 				log.Println(err)
@@ -74,7 +74,7 @@ func JWTmiddleware(next http.Handler) http.Handler {
 					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 				}
 				// provide the key to validate the signature
-				return []byte("KDks9v2f9EK1B1RZ"), nil
+				return []byte(models.Secret), nil
 			})
 			if err != nil {
 				log.Println(err)
