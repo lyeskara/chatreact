@@ -1,42 +1,35 @@
 package configs
 
-
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
 	"log"
+	"os"
+	"sync"
 
+	_ "github.com/lib/pq"
 )
+
+
 
 func Connect_db() *sql.DB {
 
-	connStr := "user=postgres password=LyesKara1723. host=localhost port=5432 dbname=rtc sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
+	connStr := os.Getenv("DB_CONFIG")
+	var db *sql.DB
+	var singleton sync.Once
+
+	singleton.Do(func() {
+		var err error
+		db, err = sql.Open("postgres", connStr)
+		if err != nil {
+			log.Fatal(err)
+		}
+	})
+
 	return db
 }
 
 /*
-package main
 
-import (
-	"database/sql"
-	"fmt"
-	"log"
-	"sync"
-
-	_ "github.com/lib/pq" // PostgreSQL driver
-)
-
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "your_db_username"
-	password = "your_db_password"
-	dbname   = "your_db_name"
-)
 
 var db *sql.DB
 var once sync.Once
