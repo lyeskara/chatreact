@@ -16,31 +16,30 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
-	password := user.Password
-	user.Password, err = configs.HashPassword(password)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	Existance, err := queries.UserExist(db, user)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	if Existance {
 		w.WriteHeader(http.StatusConflict)
 		w.Write([]byte("Username already exists"))
 		return
 	}
+	password := user.Password
+	user.Password, err = configs.HashPassword(password)
+	if err != nil {
+		log.Println(err)
+	}
 
 	_, err = db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)", user.Username, user.Password)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	JWToken, err := configs.GenerateJWToken(&user)
 	if err != nil {
-		log.Fatal(err, 1)
+		log.Println(err)
 	}
 	w.Header().Set("Authorization", "Bearer "+JWToken)
 	w.Header().Set("Content-Type", "application/json")
@@ -54,7 +53,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	hashedpassword, err := queries.GetPassword(db, user.Username)
@@ -64,7 +63,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if configs.CheckPasswordHash(user.Password, hashedpassword) {
 		JWToken, err := configs.GenerateJWToken(&user)
 		if err != nil {
-			log.Fatal(err, 1)
+			log.Println(err, 1)
 		}
 		w.Header().Set("Authorization", "Bearer "+JWToken)
 		w.Header().Set("Content-Type", "application/json")
@@ -75,7 +74,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 
@@ -88,7 +86,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	results, err := queries.Search(db, query)
 	if err != nil {
-		log.Println(err, "    ", "SEARCHING")
+		log.Println(err)
 	}
 	err = json.NewEncoder(w).Encode(results)
 	if err != nil {
@@ -97,13 +95,13 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func GetRooms(w http.ResponseWriter, r *http.Request){
+func GetRooms(w http.ResponseWriter, r *http.Request) {
 	db := configs.Connect_db()
 	defer db.Close()
 
 	results, err := queries.Rooms(db)
 	if err != nil {
-		log.Println(err, "    ", "SEARCHING")
+		log.Println(err)
 	}
 	err = json.NewEncoder(w).Encode(results)
 	if err != nil {
@@ -112,15 +110,21 @@ func GetRooms(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func GetMessages(w http.ResponseWriter, r *http.Request){
+
+func GetMessages(w http.ResponseWriter, r *http.Request) {
 	db := configs.Connect_db()
 	defer db.Close()
-    roomName := r.URL.Query().Get("roomName")
-	results, err := queries.Messages(db, roomName)
+	roomName := r.URL.Query().Get("roomName")
+	messages, err := queries.Messages(db, roomName)
 	if err != nil {
-		log.Println(err, "    ", "ROOMNAME")
+		log.Println(err)
 	}
-	err = json.NewEncoder(w).Encode(results)
+	username := r.Context().Value(models.UserName).(string)
+	data := map[string]interface{}{
+		"Messages":    messages,
+		"currentUser": username,
+	}
+	err = json.NewEncoder(w).Encode(data)
 	if err != nil {
 		log.Println(err)
 	}
