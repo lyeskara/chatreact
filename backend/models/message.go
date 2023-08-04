@@ -2,6 +2,6 @@ package models
 
 type Message struct{
 	Message string `json:"message"`
-	RoomName string `json:"roomName"`
+	Room string `json:"roomName"`
 	Username string `json:"username"`
 }
