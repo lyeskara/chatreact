@@ -37,6 +37,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 			delete(clients, conn)
+			break // Exit the loop to close the connection
 		}
 		// Parse the message json format
 		var data map[string]interface{}
@@ -65,7 +66,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 			var message models.Message
 			message.Username = r.Context().Value(models.UserName).(string)
 			message.Message = data["msg"].(string)
-			message.RoomName = data["room"].(string)
+			message.Room = data["room"].(string)
 			err = queries.AddMessage(db, &message)
 			if err != nil {
 				log.Println(err)
@@ -76,13 +77,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 			}
 			// Write message back to the client
 			broadcast <- MessageSent
-			// err = conn.WriteMessage(websocket.TextMessage, MessageSent)
-			// if err != nil {
-			// 	log.Println(err)
-			// }
-
 		}
-
 	}
 }
 
@@ -93,9 +88,14 @@ func HandleMessages() {
 			err := client.WriteMessage(websocket.TextMessage, message)
 			if err != nil {
 				log.Println("Error writing message to WebSocket:", err)
-				client.Close()
-				delete(clients, client)
+				handleClientError(client)
 			}
 		}
 	}
+}
+
+// Function to handle client errors and disconnect
+func handleClientError(client *websocket.Conn) {
+	client.Close()
+	delete(clients, client)
 }
