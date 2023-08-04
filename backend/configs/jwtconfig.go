@@ -1,9 +1,10 @@
 package configs
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"backend/models"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func GenerateJWToken(user *models.User) (string, error) {
@@ -11,7 +12,7 @@ func GenerateJWToken(user *models.User) (string, error) {
 	claims := JWToken.Claims.(jwt.MapClaims)
 	claims["username"] = user.Username
 	claims["exp"] = time.Now().Add(time.Hour * 8).Unix()
-	JWT, err := JWToken.SignedString([]byte("KDks9v2f9EK1B1RZ"))
+	JWT, err := JWToken.SignedString([]byte(models.Secret))
 	if err != nil {
 		return "", err
 	}
