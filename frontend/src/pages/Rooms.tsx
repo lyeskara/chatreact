@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import styles from '../../styles/messenger.module.css'
 
-function Messenger() {
+function Rooms() {
 
     const [created, setCreated] = useState(false)
     const [room, setRoom] = useState<string>("")
@@ -110,4 +110,4 @@ function Messenger() {
     )
 }
 
-export default Messenger
+export default Rooms

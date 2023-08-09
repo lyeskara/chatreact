@@ -33,7 +33,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)", user.Username, user.Password)
+	err = queries.AddUser(db, &user)
 	if err != nil {
 		log.Println(err)
 	}

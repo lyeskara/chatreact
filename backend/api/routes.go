@@ -5,7 +5,6 @@ import (
 )
 
 func Routes(r *chi.Mux) {
-
 	r.Post("/signup", Signup)
 	r.Post("/login", Login)
 	r.Post("/getUsers", GetUsers)

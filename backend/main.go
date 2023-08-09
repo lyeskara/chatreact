@@ -4,6 +4,7 @@ import (
 	"backend/api"
 	"backend/middlewares"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -23,5 +24,6 @@ func main() {
 	}))
 	r.Use(middlewares.JWTmiddleware)
 	api.Routes(r)
-	http.ListenAndServe(":8000", r)
+	PORT := os.Getenv("PORT")
+	http.ListenAndServe("0.0.0.0:" + PORT, r)
 }
