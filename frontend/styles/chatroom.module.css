@@ -1,0 +1,128 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    margin-top: 2rem;
+}
+
+.chat {
+    border: #000 solid;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    margin: 0 2rem 2rem 0;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+.inputt {
+    display: block;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 0.3s ease;
+    margin-right: 1rem;
+}
+
+.messageBox {
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+    max-height: 400px;
+    /* Set a maximum height for the message box */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f4f4f4;
+}
+
+/* Optional: Customize the appearance of the scrollbar */
+.messageBox::-webkit-scrollbar {
+    width: 6px;
+    /* Adjust the width as needed */
+}
+
+.messageBox::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 3px;
+}
+
+.messageBox::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+
+.msgs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.YourMessage {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.4rem;
+    justify-content: flex-end;
+
+    .Message {
+
+        border-radius: 12px;
+        background: #615EF0;
+        color: #fff;
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .name {
+        margin-left: 1rem;
+        font-size: large;
+    }
+}
+
+
+
+.NotYourMessage {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0.4rem;
+
+    .Message {
+
+        border-radius: 12px;
+        background: #3c3c49;
+        color: #ccc;
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .name {
+        margin-right: 1rem;
+        font-size: large;
+    }
+}
+
+
+
+
+.Input {
+    color: #fff;
+    position: absolute;
+    bottom: 0.1rem;
+    padding: 10px 20px;
+    margin-bottom: 0;
+    display: flex;
+
+}

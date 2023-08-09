@@ -1,0 +1,140 @@
+.Rooms {
+    display: flex;
+    height: 90vh;
+    width: fit-content;
+    flex-direction: column;
+    background: var(--white, #FFF);
+
+}
+
+.input {
+    display: block;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.roomsBox {
+    flex: 1;
+    overflow-y: auto;
+    height: 400px;
+    width: 100%;
+    /* Add the following two lines to always show the scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f4f4f4;
+}
+
+/* Optional: Customize the appearance of the scrollbar */
+.roomsBox::-webkit-scrollbar {
+    width: 6px;
+    /* Adjust the width as needed */
+}
+
+.roomsBox::-webkit-scrollbar-thumb {
+    background-color: #eee5e5;
+    border-radius: 3px;
+}
+
+.roomsBox::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+.list {
+    list-style-type: none;
+    padding-left: 0.4rem;
+    gap: 0;
+    transition: transform 0.3s ease;
+    height: 400px;
+
+
+}
+
+.list_item {
+    margin: 1rem 3rem 0 2rem;
+    padding: 0 1rem 0 1rem;
+    font-size: larger;
+
+
+}
+
+.roomNam {
+    border: #000 solid;
+    display: flex;
+    width: 100px;
+    justify-content: center;
+
+}
+
+.link {
+    text-decoration: none;
+    color: #000;
+}
+
+.link:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.top {
+
+    display: flex;
+    padding-left: 1rem;
+    border-bottom: #000 solid;
+
+
+}
+
+.roomsHeader {
+    font-size: larger;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+}
+
+.addbn {
+    width: 60px;
+    height: 40px;
+    margin: 1.2rem 0 0 6rem;
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    padding: 0.2rem 0rem 01rem 0rem;
+    color: #FFF;
+    background-color: #000;
+    border: #000 solid;
+}
+
+.createBtn {
+    appearance: none;
+    /* Remove platform-specific styling */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.createBtn:hover {
+    appearance: none;
+    /* Remove platform-specific styling */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.addRoom {
+    padding: 1.7rem 0 0 0.5rem;
+}
+
+.LogoutBtn {
+    display: flex;
+    justify-content: center;
+    width: 8rem;
+    border: #000 solid;
+    margin: 8rem 4rem 0 4rem
+}
